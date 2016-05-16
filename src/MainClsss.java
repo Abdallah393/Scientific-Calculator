@@ -2,9 +2,7 @@ package calca;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -30,6 +28,7 @@ public class Calca extends Application {
     boolean isOpen = false;
     boolean isequal = false;
     int countOpen = 0;
+    static String answer;
     int countClose = 0;
     long startTime;
     long currentTime;
@@ -42,7 +41,7 @@ public class Calca extends Application {
          * project and return v box that contain all design of the project
          */
         vbox2 = desingCalculator();
-        Scene scene = new Scene(vbox2, 200, 200);
+        Scene scene = new Scene(vbox2, 350, 400);
         arg0.setTitle("Calcluator");
         arg0.setScene(scene);
         arg0.show();
@@ -80,16 +79,20 @@ public class Calca extends Application {
         Button minus = new Button("-");
         Button mul = new Button("*");
         Button div = new Button("/");
-        Button sqrt = new Button("?");
+        Button sqrt = new Button("√");
         Button mod = new Button("%");
         Button dot = new Button(".");
         Button square = new Button("x^2");
         Button equal = new Button("=");
         Button open = new Button("(");
         Button close = new Button(")");
-        Button clear = new Button("?");
+        Button clear = new Button("←");
         Button zero = new Button("0");
         Button reset = new Button("Reset");
+        
+
+        Button ans = new Button("ans");
+        Button pi = new Button("pi");
 //set css design to components of design
               one.setStyle("-fx-font-size:20; -fx-color:#004646");
                 two.setStyle("-fx-font-size:20; -fx-color:#004646");
@@ -110,29 +113,41 @@ public class Calca extends Application {
                    mod.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    dot.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    sqrt.setStyle("-fx-font-size:20; -fx-color:#088A85");
-               square.setStyle("-fx-font-size:20; -fx-color:#088A85");
+                      square.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    open.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    close.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    equal.setStyle("-fx-font-size:20; -fx-color:#04B431");
-                  
+                  //set css design to components of design
+                  ans.setStyle("-fx-font-size:20; -fx-color: red");
+                  pi.setStyle("-fx-font-size:20; -fx-color: red");
+
 
         HBox hbox1 = new HBox();
-        hbox1.setSpacing(2);
+       // hbox1.setSpacing(0);
         hbox1.getChildren().addAll(one, two, three, clear, reset);
         HBox hbox2 = new HBox();
-        hbox2.setSpacing(2);
+        //hbox2.setSpacing(2);
         hbox2.getChildren().addAll(four, five, six, mul, div);
         HBox hbox3 = new HBox();
-        hbox3.setSpacing(2);
+       // hbox3.setSpacing(2);
         hbox3.getChildren().addAll(seven, eight, nine, open, close);
         HBox hbox4 = new HBox();
-        hbox4.setSpacing(2);
+       // hbox4.setSpacing(2);
         HBox hbox5 = new HBox();
-        hbox5.setSpacing(2);
-        hbox4.getChildren().addAll(zero, dot, mod, plus, minus);
+       // hbox5.setSpacing(2);
+        hbox4.getChildren().addAll(zero, dot, mod,plus, minus);
 
-        hbox5.getChildren().addAll(square, sqrt, equal);
+        hbox5.getChildren().addAll(square, sqrt,ans,pi , equal);
         
+       // HBox hbox6 = new HBox();
+       // hbox6.getChildren().addAll(ans, sin, cos, tan, pi);
+        ans.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
+        ans.prefHeightProperty().bind(hbox5.heightProperty());
+
+
+        pi.prefWidthProperty().bind(hbox4.widthProperty().divide(5));
+        pi.prefHeightProperty().bind(hbox4.heightProperty());
+
         one.prefWidthProperty().bind(hbox1.widthProperty().divide(5));
         one.prefHeightProperty().bind(hbox1.heightProperty());
         two.prefWidthProperty().bind(hbox1.widthProperty().divide(5));
@@ -179,22 +194,48 @@ public class Calca extends Application {
         sqrt.prefHeightProperty().bind(hbox5.heightProperty());
         equal.prefHeightProperty().bind(hbox5.heightProperty());
 
-        equal.prefWidthProperty().bind(hbox5.widthProperty().divide(5).multiply(3));
+        equal.prefWidthProperty().bind(hbox5.widthProperty().divide(5).multiply(1));
         vbox.getChildren().addAll(textarea, hbox1, hbox2, hbox3, hbox4, hbox5);
         hbox1.prefWidthProperty().bind(vbox.widthProperty());
         hbox2.prefWidthProperty().bind(vbox.widthProperty());
         hbox3.prefWidthProperty().bind(vbox.widthProperty());
         hbox4.prefWidthProperty().bind(vbox.widthProperty());
         hbox5.prefWidthProperty().bind(vbox.widthProperty());
+        //hbox6.prefWidthProperty().bind(vbox.widthProperty());
 
         hbox1.prefHeightProperty().bind(vbox.heightProperty().divide(6));
         hbox2.prefHeightProperty().bind(vbox.heightProperty().divide(6));
         hbox3.prefHeightProperty().bind(vbox.heightProperty().divide(6));
         hbox4.prefHeightProperty().bind(vbox.heightProperty().divide(6));
         hbox5.prefHeightProperty().bind(vbox.heightProperty().divide(6));
+       // hbox6.prefHeightProperty().bind(vbox.heightProperty().divide(7));
 
         textarea.prefWidthProperty().bind(vbox.widthProperty());
         textarea.prefHeightProperty().bind(vbox.heightProperty().divide(6));
+        
+        ///// pi button////////////////
+        pi.setOnAction(e -> {
+       char ch = ' ';
+            if (!showExpression.equals("")) {
+                ch = showExpression.charAt(showExpression.length() - 1);
+            }
+            if(showExpression.equals(""))
+            {
+            showExpression+="pi";
+            hiddenExpression+="1*3.1428";
+            textarea.setText(showExpression);
+            }
+            else if(Character.isDigit(ch)){
+            
+            }
+            else
+            {
+            showExpression+="pi";
+            hiddenExpression+="1*3.1428";
+            textarea.setText(showExpression);
+            }
+            
+                    });
         ///////////////////////////////////////////////////////////////// one button is clicked
         /**
          * when click on button 1 we check if last character is not ')' and is
@@ -239,6 +280,7 @@ public class Calca extends Application {
                 textarea.setText(showExpression);
             }
             if (isequal) {
+                
                 showExpression = "2";
                 hiddenExpression = "2";
                 textarea.setText(showExpression);
@@ -293,6 +335,7 @@ public class Calca extends Application {
                 textarea.setText(showExpression);
                 isequal = false;
             }
+          
         });
 
         /**
@@ -454,12 +497,21 @@ public class Calca extends Application {
                  hiddenExpression += ".";
                  textarea.setText(showExpression);
              }
-             if(isequal){
+            else if(isequal||showExpression.equals("")){
             	 showExpression = "0.";
                  hiddenExpression = "0.";
                  textarea.setText(showExpression);
                  isequal=false;
              }
+            
+             else
+            {
+                showExpression += "0.";
+                 hiddenExpression += "0.";
+                 textarea.setText(showExpression);
+                 isequal=false;
+            }
+            
 	
 		 });
         ///////////////////////////////////////////////////////////////// plus button is clicked
@@ -474,30 +526,49 @@ public class Calca extends Application {
                 char ch = ' ';
                
                   ch = showExpression.charAt(showExpression.length() - 1);
-            
+        if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+        }
          if(isequal){
              if(showExpression.equals("error expression")){
                  showExpression = "";
          hiddenExpression = "";
+         isSquare=false;
              }
              else{
     	 showExpression += "+";
          hiddenExpression += "+";
          textarea.setText(showExpression);
          isequal=false;
+           isSquare=false;
+         
              }
                }
-         else if(ch==')'){
-         
+         else if(ch==')'||ch=='.'){
+           isSquare=false;
       showExpression += "+";
      hiddenExpression += "+";
          textarea.setText(showExpression);
-     }else{
+     }
+         else if(ch=='('){}
+         else if (!Character.isDigit(ch)){}
+         else{
 	 showExpression += "+";
      hiddenExpression += "+";
      textarea.setText(showExpression);
      isSquare = false;	 
      }
+          if(ch=='i')
+                    {
+                    
+                    showExpression += "+";
+                        hiddenExpression += "+";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    
+                    }
+       // if (!Character.isDigit(ch)){}
 
             }
                  catch(Exception e)
@@ -514,7 +585,28 @@ public class Calca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    // fmin=1;if(isequal){
+                
+                    char ch = ' ';
+                    char ch1 = ' ';
+               if(!showExpression.equals("")){
+                  ch = showExpression.charAt(showExpression.length() - 1);
+                    if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+        }
+             if(ch=='-'){
+             ch1 = showExpression.charAt(showExpression.length() - 2);
+             if(ch1=='-'){
+                        showExpression = "error expression";
+                        hiddenExpression = "error expression";
+                        textarea.setText(showExpression);
+                        isequal=true;
+                       
+                        
+             }
+             }  
+               }
+                   
                     if (isequal) {
                         if (showExpression.equals("error expression")) {
                             showExpression = "";
@@ -526,14 +618,21 @@ public class Calca extends Application {
                             isequal = false;
                         }
                     } else if (showExpression == "") {
-
-                    } else {
+                        
+                            showExpression += "-";
+                            hiddenExpression += "-";
+                            textarea.setText(showExpression);
+                    } 
+                   
+                    else {
                         showExpression += "-";
                         hiddenExpression += "-";
                         textarea.setText(showExpression);
                         isSquare = false;
+                    
                     }
-
+                    
+                    
                 } catch (Exception e) {
                 }
             }
@@ -546,7 +645,12 @@ public class Calca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
+                       isequal = false;
                     char ch = showExpression.charAt(showExpression.length() - 1);
+                    if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+        }
                     if (isequal) {
                         if (showExpression.equals("error expression")) {
                             showExpression = "";
@@ -567,6 +671,21 @@ public class Calca extends Application {
 //         hiddenExpression = "0/";
 //         textarea.setText(showExpression); 
                     }
+                     if(ch=='.'){
+                         showExpression += "/";
+                        hiddenExpression += "/";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    }
+                      if(ch=='i')
+                    {
+                    
+                    showExpression += "/";
+                        hiddenExpression += "/";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    
+                    }
                 } catch (Exception e) {
                 }
 
@@ -580,9 +699,12 @@ public class Calca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-
+   isequal = false;
                     char ch = showExpression.charAt(showExpression.length() - 1);
-
+                 if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+        }
                     if (isequal) {
                         if (showExpression.equals("error expression")) {
                             showExpression = "";
@@ -603,6 +725,21 @@ public class Calca extends Application {
 //         hiddenExpression = "0*";
 //         textarea.setText(showExpression); 
                     }
+                     if(ch=='.'){
+                         showExpression += "*";
+                        hiddenExpression += "*";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    }
+                      if(ch=='i')
+                    {
+                    
+                    showExpression += "*";
+                        hiddenExpression += "*";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    
+                    }
                 } catch (Exception e) {
                 }
 
@@ -617,8 +754,12 @@ public class Calca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    // fmod=1;
+                       isequal = false;
                     char ch = showExpression.charAt(showExpression.length() - 1);
+                    if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+        }
                     if (isequal) {
                         if (showExpression.equals("error expression")) {
                             showExpression = "";
@@ -641,6 +782,21 @@ public class Calca extends Application {
 //         hiddenExpression = "0%";
 //         textarea.setText(showExpression); 
                     }
+                     if(ch=='.'){
+                         showExpression += "%";
+                        hiddenExpression += "%";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    }
+                      if(ch=='i')
+                    {
+                    
+                    showExpression += "%";
+                        hiddenExpression += "%";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    
+                    }
                 } catch (Exception e) {
                 }
             }
@@ -654,22 +810,43 @@ public class Calca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
+                       isequal = false;
                     char ch = ' ';
                     if (!showExpression.equals("")) {
                         ch = showExpression.charAt(showExpression.length() - 1);
+                        
                     }
+                    if(ch=='.'){
+            hiddenExpression+='0';
+            ch='0';
+                   }
                     if (showExpression.equals("")) {
-                        showExpression += "?";
+                        showExpression += "√";
                         hiddenExpression += "|";
                         textarea.setText(showExpression);
                         isequal=false;
-                    } else if (!Character.isDigit(ch) && isSquare == false && ch != ')') {
+                    } else if (!Character.isDigit(ch) && isSquare == false && ch != ')'&& ch != '?') {
 
-                        showExpression += "?";
+                        showExpression += "√";
                         hiddenExpression += "|";
                         textarea.setText(showExpression);
                         isequal=false;
 
+                    }
+                   if (Character.isDigit(ch))
+                   {
+                    showExpression += "√";
+                        hiddenExpression += "*|";
+                   textarea.setText(showExpression);
+                   }
+                    if(ch=='i')
+                    {
+                    
+                    showExpression += "√";
+                        hiddenExpression += "√";
+                        textarea.setText(showExpression);
+                        isSquare = false;
+                    
                     }
                 } catch (Exception e) {
                 }
@@ -685,32 +862,48 @@ public class Calca extends Application {
         square.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
-                    //  fsquare=1;
-                    char lastChar = showExpression.charAt(showExpression.length() - 1);
+               
+               try {
+                      isequal = false;
+	char lastChar=' ';
+        int index=0;
+if(!showExpression.equals(""))
+ lastChar = showExpression.charAt(showExpression.length() - 1);
+if(lastChar=='.'){
+            hiddenExpression+='0';
+        }
+if (Character.isDigit(lastChar)) {
+String number = "";
+String swapNumber = "";
+String str = hiddenExpression;
+//String str = hiddenExpression;
 
-                    if (Character.isDigit(lastChar)) {
-                        String number = "";
-                        String swapNumber = "";
-                        String str = textarea.getText();
-                        for (int i = str.length() - 1; i >= 0; i--) {
-                            char ch = str.charAt(i);
-                            if (Character.isDigit(ch)) {
-                                number += ch;
-                            } else {
-                                break;
-                            }
-                        }
-                        for (int i = number.length() - 1; i >= 0; i--) {
-                            char ch = number.charAt(i);
-                            swapNumber += ch;
-                        }
-                        hiddenExpression += "*" + swapNumber;
-                        showExpression += "^2";
-                        textarea.setText(showExpression);
-                        isSquare = true;
-                    }
-                } catch (Exception e) {
+for (int i = str.length()-1; i >= 0; i--) {
+char ch = str.charAt(i);
+if (Character.isDigit(ch)) {
+number += ch;
+}
+else if( ch=='.'){
+    number+=".";
+}
+else {
+    index=i+1;
+break;
+}
+}
+for (int i = number.length()-1; i >= 0; i--) {
+    
+char ch = number.charAt(i);
+swapNumber += ch;
+}
+double temp=Double.parseDouble(swapNumber)*Double.parseDouble(swapNumber);
+//hiddenExpression += "*" + Double.parseDouble(number);
+hiddenExpression=hiddenExpression.substring(0, index);
+hiddenExpression+=temp;
+showExpression += "^2";
+textarea.setText(showExpression);
+isSquare = true;} 
+}  catch (Exception e) {
                 }
             }
 
@@ -721,7 +914,7 @@ public class Calca extends Application {
          * that delete last character in showExpression and hiddenExpression to
          * begin again
          */
-        clear.setOnAction(new EventHandler<ActionEvent>() {
+     clear.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
@@ -739,7 +932,7 @@ public class Calca extends Application {
                         if (countOpen == 0);
                         isOpen = false;
                     }
-
+                    isequal=false;
                     String str = textarea.getText();
                     String newStr = str.substring(0, showExpression.length() - 1);
                     showExpression = newStr;
@@ -750,6 +943,16 @@ public class Calca extends Application {
                 }
             }
 
+        });
+         ans.setOnAction(e -> {
+        if(!isequal)
+        {
+        showExpression+=answer;
+        hiddenExpression+=answer;
+         textarea.setText(showExpression);
+        isequal=false;
+        }
+        
         });
         ///////////////////////////////////////////////////////////////// reset button is clicked
         /**
@@ -769,12 +972,19 @@ public class Calca extends Application {
         });
         open.setOnAction(e -> {
             char ch1 = ' ';
+                isequal=false;
             if (showExpression.equals("error expression")) {
                 showExpression = "";
                 hiddenExpression = "";
+            
             }
             if (!showExpression.equals("")) {
                 ch1 = showExpression.charAt(showExpression.length() - 1);
+                 if(ch1=='.'){
+            hiddenExpression+='0';
+            showExpression+='0';
+            ch1='0';
+        }
             }
             if (((!Character.isDigit(ch1) && isSquare == false) && ch1 != ')') || ch1 == ' ') {
                 showExpression += "(";
@@ -782,6 +992,14 @@ public class Calca extends Application {
                 textarea.setText(showExpression);
                 isOpen = true;
                 countOpen++;
+            }
+            if(Character.isDigit(ch1)){
+            showExpression += "*(";
+                hiddenExpression += "*(";
+                textarea.setText(showExpression);
+                isOpen = true;
+                countOpen++;
+            
             }
         });
         ///////////////////////////////////////////////////////////////// close brackets button is clicked
@@ -793,6 +1011,13 @@ public class Calca extends Application {
             char ch1 = ' ';
             if (!showExpression.equals("")) {
                  ch1 = showExpression.charAt(showExpression.length() - 1);
+                 if(ch1=='.')
+                 {
+                 hiddenExpression+="0";
+         
+                 ch1='0';
+                 
+                 }
              }
                      if (ch1=='(') {
                   textarea.setText("error expression");
@@ -801,12 +1026,24 @@ public class Calca extends Application {
          isOpen=false;
                  
              }
-			 if (isOpen) {
+		if (isOpen) {
+                             if(ch1=='.')
+                             {
+                             showExpression += ")";
+                 hiddenExpression += ")";
+                 textarea.setText(showExpression);
+                 countClose++;
+                             }
+              else if(!Character.isDigit(ch1)&&ch1!=')'){}
+                      
+                              else{
                  showExpression += ")";
                  hiddenExpression += ")";
                  textarea.setText(showExpression);
                  countClose++;
              }
+                         }
+                
 		 });
         ///////////////////////////////////////////////////////////////// equal button is clicked
         /**
@@ -816,26 +1053,33 @@ public class Calca extends Application {
         equal.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                char ch=' ';
+              isequal=true;
                 try {
+         
                     if (countClose != countOpen) {
                         textarea.setText("error expression");
                         showExpression = "";
                         hiddenExpression = "";
                     } else {
-
+                        ch = showExpression.charAt(showExpression.length() - 1);
+                    if(ch=='.'){
+            hiddenExpression+='0';
+        }             //
                         EvaluteExpression ev = new EvaluteExpression();
                         hiddenExpression = ev.brackets(hiddenExpression);
+                        answer=hiddenExpression;
                         textarea.setText(hiddenExpression);
                         showExpression = hiddenExpression;
 //                 if(fdiv==1 || fmin==1|| fmod==1||fmul==1||fplus==1||fsqrt==1||fsquare==1){
 //                 //showExpression = hiddenExpression;
 //                 
-//                 }else{
+//                 }else{.
 //                 showExpression ="";
 //                 hiddenExpression="";
 //                 }
 
-                        isequal = true;
+                        
                     }
                 } catch (Exception e) {
                 }
@@ -850,6 +1094,8 @@ public class Calca extends Application {
      * @param args
      */
     public static void main(String[] args) {
+        
+
 
         Application.launch(args);
     }
@@ -868,10 +1114,12 @@ class EvaluteExpression {
 
     /**
      * this method for evaluate first brackets because brackets is more priority
+     *
      * @param <E>
      * @param e
      * @return
-     */public <E> E brackets(E e) {
+     */
+    public <E> E brackets(E e) {
         check = new EvaluteExpression();
         String s = e.toString();
         while (s.contains(Character.toString('(')) || s.contains(Character.toString(')'))) {
@@ -890,13 +1138,13 @@ class EvaluteExpression {
 
         }
         s = check.recognize(s);
-        return (E)s;
+        return (E) s;
     }
-
 
     /**
      * method for dismount expression and rearrange expression to be prepared
      * for evaluating
+     *
      * @param <E>
      * @param e
      * @return
@@ -930,7 +1178,7 @@ class EvaluteExpression {
             }
         }
         contents = putIt.result(contents, "^", "%");
-        contents = putIt.result(contents, "|", "&");
+        contents = putIt.result(contents, "|", "$");
         contents = putIt.result(contents, "*", "/");
         contents = putIt.result(contents, "+", "-");
         return (E) contents.get(0);
@@ -956,20 +1204,22 @@ class EvaluteExpression {
          * method that we send to it array list contains arithmetic statment and
          * 2 operators and evaluate expressions of this operators and return
          * array list of after evaluate
+         *
          * @param arrayList
          * @param op1
          * @param op2
          * @return
          */
         public ArrayList<String> result(ArrayList<String> arrayList, String op1, String op2) {
-            int scale = 10;
+            int scale = 5;
             String e = "";
             BigDecimal result = new BigDecimal(0);
             for (int c = 0; c < arrayList.size(); c++) {
                 if (arrayList.get(c).equals(op1) || arrayList.get(c).equals(op2)) {
                     if (arrayList.get(c).equals("|")) {
                         result = new BigDecimal(Math.sqrt(Double.parseDouble(arrayList.get(c + 1))));
-                    } else if (arrayList.get(c).equals("*")) {
+                    } 
+                  else if (arrayList.get(c).equals("*")) {
                         result = new BigDecimal(arrayList.get(c - 1)).multiply(new BigDecimal(arrayList.get(c + 1)));
                     } else if (arrayList.get(c).equals("/")) {
                         if (arrayList.get(c + 1).equals("0")) {//divide by zero
@@ -977,21 +1227,25 @@ class EvaluteExpression {
                             arrayList.clear();
                             arrayList.add(e);
                             return arrayList;
+                        } else if (arrayList.get(c + 1).equals(".")) {
+                            e = "error expression";
+                            arrayList.clear();
+                            arrayList.add(e);
+                            return arrayList;
                         }
-                        else if(arrayList.get(c +1).equals("."))
-                        {
-                         e="error expression";
-                               arrayList.clear();
-                               arrayList.add(e);
-                               return arrayList;
-                        } 
                         result = new BigDecimal(arrayList.get(c - 1)).divide(new BigDecimal(arrayList.get(c + 1)), scale, BigDecimal.ROUND_DOWN);
                     } else if (arrayList.get(c).equals("+")) {
                         result = new BigDecimal(arrayList.get(c - 1)).add(new BigDecimal(arrayList.get(c + 1)));
                     } else if (arrayList.get(c).equals("-")) {
                         result = new BigDecimal(arrayList.get(c - 1)).subtract(new BigDecimal(arrayList.get(c + 1)));
                     } else if (arrayList.get(c).equals("%")) {
-
+                         if (arrayList.get(c + 1).equals("0")) {//divide by zero
+                            e = "error expression";
+                            arrayList.clear();
+                            arrayList.add(e);
+                            return arrayList;
+                        } 
+                         else
                         result = new BigDecimal(arrayList.get(c - 1)).remainder(new BigDecimal(arrayList.get(c + 1)));
                     }
 
@@ -1011,3 +1265,4 @@ class EvaluteExpression {
         }
     }
 }
+
