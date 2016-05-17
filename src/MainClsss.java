@@ -1,4 +1,3 @@
-package calca;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import javafx.stage.Stage;
  * Calculator application 
  * @author Anonymous
  */
-public class Calca extends Application {
+public class Calculator extends Application {
 
     /**
      * declare of objects and variables that we will use it in our project
@@ -79,17 +78,20 @@ public class Calca extends Application {
         Button minus = new Button("-");
         Button mul = new Button("*");
         Button div = new Button("/");
-        Button sqrt = new Button("√");
+        Button sqrt = new Button("âˆڑ");
         Button mod = new Button("%");
         Button dot = new Button(".");
         Button square = new Button("x^2");
         Button equal = new Button("=");
         Button open = new Button("(");
         Button close = new Button(")");
-        Button clear = new Button("←");
+        Button clear = new Button("â†گ");
         Button zero = new Button("0");
         Button reset = new Button("Reset");
         
+        Button sin = new Button("sin");
+        Button cos = new Button("cos");
+        Button tan = new Button("tan");
 
         Button ans = new Button("ans");
         Button pi = new Button("pi");
@@ -118,8 +120,11 @@ public class Calca extends Application {
                    close.setStyle("-fx-font-size:20; -fx-color:#088A85");
                    equal.setStyle("-fx-font-size:20; -fx-color:#04B431");
                   //set css design to components of design
-                  ans.setStyle("-fx-font-size:20; -fx-color: red");
-                  pi.setStyle("-fx-font-size:20; -fx-color: red");
+                  ans.setStyle("-fx-font-size:20; -fx-color: #04B431");
+                  pi.setStyle("-fx-font-size:20; -fx-color: #04B431");
+                  sin.setStyle("-fx-font-size:20; -fx-color: red");
+        cos.setStyle("-fx-font-size:20; -fx-color: red");
+        tan.setStyle("-fx-font-size:20; -fx-color: red");
 
 
         HBox hbox1 = new HBox();
@@ -134,19 +139,32 @@ public class Calca extends Application {
         HBox hbox4 = new HBox();
        // hbox4.setSpacing(2);
         HBox hbox5 = new HBox();
+        HBox hbox6=new HBox();
+        hbox6.getChildren().addAll(pi,ans,equal);
        // hbox5.setSpacing(2);
         hbox4.getChildren().addAll(zero, dot, mod,plus, minus);
 
-        hbox5.getChildren().addAll(square, sqrt,ans,pi , equal);
+        hbox5.getChildren().addAll(square, sqrt,sin,cos,tan);
         
        // HBox hbox6 = new HBox();
        // hbox6.getChildren().addAll(ans, sin, cos, tan, pi);
-        ans.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
-        ans.prefHeightProperty().bind(hbox5.heightProperty());
+        
+        sin.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
+        sin.prefHeightProperty().bind(hbox5.heightProperty());
+        
+        cos.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
+        cos.prefHeightProperty().bind(hbox5.heightProperty());
+        
+        tan.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
+        tan.prefHeightProperty().bind(hbox5.heightProperty());
+        
+        
+        ans.prefWidthProperty().bind(hbox6.widthProperty().divide(5));
+        ans.prefHeightProperty().bind(hbox6.heightProperty());
 
-
-        pi.prefWidthProperty().bind(hbox4.widthProperty().divide(5));
-        pi.prefHeightProperty().bind(hbox4.heightProperty());
+     
+        pi.prefWidthProperty().bind(hbox5.widthProperty().divide(5));
+        pi.prefHeightProperty().bind(hbox5.heightProperty());
 
         one.prefWidthProperty().bind(hbox1.widthProperty().divide(5));
         one.prefHeightProperty().bind(hbox1.heightProperty());
@@ -194,8 +212,8 @@ public class Calca extends Application {
         sqrt.prefHeightProperty().bind(hbox5.heightProperty());
         equal.prefHeightProperty().bind(hbox5.heightProperty());
 
-        equal.prefWidthProperty().bind(hbox5.widthProperty().divide(5).multiply(1));
-        vbox.getChildren().addAll(textarea, hbox1, hbox2, hbox3, hbox4, hbox5);
+        equal.prefWidthProperty().bind(hbox6.widthProperty().divide(5).multiply(3));
+        vbox.getChildren().addAll(textarea, hbox1, hbox2, hbox3, hbox4, hbox5,hbox6);
         hbox1.prefWidthProperty().bind(vbox.widthProperty());
         hbox2.prefWidthProperty().bind(vbox.widthProperty());
         hbox3.prefWidthProperty().bind(vbox.widthProperty());
@@ -203,21 +221,164 @@ public class Calca extends Application {
         hbox5.prefWidthProperty().bind(vbox.widthProperty());
         //hbox6.prefWidthProperty().bind(vbox.widthProperty());
 
-        hbox1.prefHeightProperty().bind(vbox.heightProperty().divide(6));
-        hbox2.prefHeightProperty().bind(vbox.heightProperty().divide(6));
-        hbox3.prefHeightProperty().bind(vbox.heightProperty().divide(6));
-        hbox4.prefHeightProperty().bind(vbox.heightProperty().divide(6));
-        hbox5.prefHeightProperty().bind(vbox.heightProperty().divide(6));
-       // hbox6.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox1.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox2.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox3.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox4.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox5.prefHeightProperty().bind(vbox.heightProperty().divide(7));
+        hbox6.prefHeightProperty().bind(vbox.heightProperty().divide(7));
 
         textarea.prefWidthProperty().bind(vbox.widthProperty());
-        textarea.prefHeightProperty().bind(vbox.heightProperty().divide(6));
+        textarea.prefHeightProperty().bind(vbox.heightProperty().divide(7));
         
-        ///// pi button////////////////
-        pi.setOnAction(e -> {
+        
+        
+        sin.setOnAction(e -> {
        char ch = ' ';
             if (!showExpression.equals("")) {
                 ch = showExpression.charAt(showExpression.length() - 1);
+            }
+                      if(ch=='.'){
+                          showExpression+="0";
+            hiddenExpression+="0";
+            ch='0';
+        }
+            if(showExpression.equals(""))
+            {
+            showExpression+="sin(";
+            hiddenExpression+="@(";
+            textarea.setText(showExpression);
+            countOpen++;
+            isOpen=true;
+              isequal=false;
+            }
+            
+             else if(Character.isDigit(ch)|| ch==')'|| isSquare|| ch=='i')
+            {
+            showExpression+="*sin(";
+            hiddenExpression+="*@(";
+            textarea.setText(showExpression);
+            countOpen++;
+             isOpen=true;
+               isequal=false;
+            }
+            else if(ch=='('|| ch=='*' || ch=='/' || ch=='+' || ch=='-' || ch=='%'||ch=='âˆڑ')
+            {
+              
+               showExpression+="sin(";
+               hiddenExpression+="@(";
+               textarea.setText(showExpression);
+              countOpen++;
+                 isOpen=true;
+                   isequal=false;
+            
+            }
+         });
+        
+        
+        //// cos button///////////
+        cos.setOnAction(e -> {
+       char ch = ' ';
+            if (!showExpression.equals("")) {
+                ch = showExpression.charAt(showExpression.length() - 1);
+            }
+              if(ch=='.'){
+                          showExpression+="0";
+            hiddenExpression+="0";
+            ch='0';
+        }
+            if(showExpression.equals(""))
+            {
+            showExpression+="cos(";
+            hiddenExpression+="1*&(";
+            textarea.setText(showExpression);
+            countOpen++;
+             isOpen=true;
+             isequal=false;
+            
+            }
+            else if(Character.isDigit(ch)|| ch==')'|| isSquare|| ch=='i')
+            {
+            showExpression+="*cos(";
+            hiddenExpression+="*&(";
+            textarea.setText(showExpression);
+            countOpen++;
+             isOpen=true;
+               isequal=false;
+            }
+            else if(ch=='('|| ch=='*' || ch=='/' || ch=='+' || ch=='-' || ch=='%' ||ch=='âˆڑ')
+            {
+              
+               showExpression+="cos(";
+               hiddenExpression+="&(";
+               textarea.setText(showExpression);
+              countOpen++;
+                 isOpen=true;
+                   isequal=false;
+            
+            }
+         });
+        /// tan button //////////////////////////
+        
+        tan.setOnAction(e -> {
+       char ch = ' ';
+            if (!showExpression.equals("")) {
+                ch = showExpression.charAt(showExpression.length() - 1);
+            }
+              if(ch=='.'){
+                          showExpression+="0";
+            hiddenExpression+="0";
+            ch='0';
+        }
+              
+//              if(ch=='i'){
+//                          showExpression+="*tan(";
+//            hiddenExpression+="*#(";
+//            ch='0';
+//        }
+            if(showExpression.equals(""))
+            {
+            showExpression+="tan(";
+            hiddenExpression+="1*#(";
+            textarea.setText(showExpression);
+            isOpen=true;
+            countOpen++;
+              isequal=false;
+            }
+             else if(Character.isDigit(ch)|| ch==')'|| isSquare|| ch=='i')
+            {
+            showExpression+="*tan(";
+            hiddenExpression+="*#(";
+            textarea.setText(showExpression);
+            countOpen++;
+             isOpen=true;
+               isequal=false;
+            }
+            else if(ch=='('|| ch=='*' || ch=='/' || ch=='+' || ch=='-' || ch=='%' ||ch=='âˆڑ')
+            {
+              
+               showExpression+="tan(";
+               hiddenExpression+="#(";
+               textarea.setText(showExpression);
+              countOpen++;
+               isOpen=true;
+                  isequal=false;
+            
+            }
+         });
+        
+        ///// pi button////////////////
+        pi.setOnAction(e -> {
+           
+       char ch = ' ';
+            if (!showExpression.equals("")) {
+                ch = showExpression.charAt(showExpression.length() - 1);
+            }
+            if(isequal){
+                         showExpression="pi";
+                          hiddenExpression="1*3.1428";
+            textarea.setText(showExpression);
+             isequal=false;
             }
             if(showExpression.equals(""))
             {
@@ -803,7 +964,7 @@ public class Calca extends Application {
         });
 ///////////////////////////////////////////////////////////////// sqrt button is clicked
         /**
-         * action of button âˆڑ when we clicked on this is what be happen
+         * action of button أ¢ث†ع‘ when we clicked on this is what be happen
          */
         sqrt.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -821,13 +982,13 @@ public class Calca extends Application {
             ch='0';
                    }
                     if (showExpression.equals("")) {
-                        showExpression += "√";
+                        showExpression += "âˆڑ";
                         hiddenExpression += "|";
                         textarea.setText(showExpression);
                         isequal=false;
                     } else if (!Character.isDigit(ch) && isSquare == false && ch != ')'&& ch != '?') {
 
-                        showExpression += "√";
+                        showExpression += "âˆڑ";
                         hiddenExpression += "|";
                         textarea.setText(showExpression);
                         isequal=false;
@@ -835,15 +996,15 @@ public class Calca extends Application {
                     }
                    if (Character.isDigit(ch))
                    {
-                    showExpression += "√";
+                    showExpression += "âˆڑ";
                         hiddenExpression += "*|";
                    textarea.setText(showExpression);
                    }
                     if(ch=='i')
                     {
                     
-                    showExpression += "√";
-                        hiddenExpression += "√";
+                    showExpression += "âˆڑ";
+                        hiddenExpression += "âˆڑ";
                         textarea.setText(showExpression);
                         isSquare = false;
                     
@@ -904,6 +1065,9 @@ showExpression += "^2";
 textarea.setText(showExpression);
 isSquare = true;} 
 }  catch (Exception e) {
+    showExpression="";
+    hiddenExpression="";
+    textarea.setText("error");
                 }
             }
 
@@ -940,6 +1104,9 @@ isSquare = true;}
                     textarea.setText(showExpression);
 
                 } catch (Exception e) {
+                      showExpression="";
+    hiddenExpression="";
+    textarea.setText("error");
                 }
             }
 
@@ -1082,6 +1249,9 @@ isSquare = true;}
                         
                     }
                 } catch (Exception e) {
+                      showExpression="";
+    hiddenExpression="";
+    textarea.setText("error");
                 }
             }
         });
@@ -1177,6 +1347,8 @@ class EvaluteExpression {
                 }
             }
         }
+        contents = putIt.result(contents, "@", "&");
+        contents = putIt.result(contents, "#", "!");
         contents = putIt.result(contents, "^", "%");
         contents = putIt.result(contents, "|", "$");
         contents = putIt.result(contents, "*", "/");
@@ -1204,7 +1376,6 @@ class EvaluteExpression {
          * method that we send to it array list contains arithmetic statment and
          * 2 operators and evaluate expressions of this operators and return
          * array list of after evaluate
-         *
          * @param arrayList
          * @param op1
          * @param op2
@@ -1216,10 +1387,19 @@ class EvaluteExpression {
             BigDecimal result = new BigDecimal(0);
             for (int c = 0; c < arrayList.size(); c++) {
                 if (arrayList.get(c).equals(op1) || arrayList.get(c).equals(op2)) {
-                    if (arrayList.get(c).equals("|")) {
+                     if (arrayList.get(c).equals("@")) {
+                        result = new BigDecimal(Math.sin((Double.parseDouble(arrayList.get(c + 1)))*(Math.PI/180)));
+                    }
+                    else if (arrayList.get(c).equals("&")) {
+                        result = new BigDecimal(Math.cos((Double.parseDouble(arrayList.get(c + 1)))*(Math.PI/180)));
+                    }
+                    else if (arrayList.get(c).equals("#")) {
+                        result = new BigDecimal(Math.tan((Double.parseDouble(arrayList.get(c + 1)))*(Math.PI/180)));
+                    }
+                   else if (arrayList.get(c).equals("|")) {
                         result = new BigDecimal(Math.sqrt(Double.parseDouble(arrayList.get(c + 1))));
                     } 
-                  else if (arrayList.get(c).equals("*")) {
+                else if (arrayList.get(c).equals("*")) {
                         result = new BigDecimal(arrayList.get(c - 1)).multiply(new BigDecimal(arrayList.get(c + 1)));
                     } else if (arrayList.get(c).equals("/")) {
                         if (arrayList.get(c + 1).equals("0")) {//divide by zero
@@ -1248,13 +1428,27 @@ class EvaluteExpression {
                          else
                         result = new BigDecimal(arrayList.get(c - 1)).remainder(new BigDecimal(arrayList.get(c + 1)));
                     }
-
+              
                     try {
+                        if(arrayList.get(c).equals("@") || arrayList.get(c).equals("#")||arrayList.get(c).equals("&"))
+                        {
+                          arrayList.set(c, (result.setScale(scale, RoundingMode.HALF_DOWN).
+                                stripTrailingZeros().toPlainString()));
+                               arrayList.remove(c + 1);
+                               
+                        
+                        }
+                        else{
                         arrayList.set(c, (result.setScale(scale, RoundingMode.HALF_DOWN).
                                 stripTrailingZeros().toPlainString()));
                         arrayList.remove(c + 1);
                         arrayList.remove(c - 1);
+                        }
                     } catch (Exception ignored) {
+                        Calculator cal=new Calculator();
+                          cal.showExpression="";
+                         cal.hiddenExpression="";
+                       cal.textarea.setText("error");
                     }
                 } else {
                     continue;
